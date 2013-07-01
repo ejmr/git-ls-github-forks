@@ -18,6 +18,31 @@ API_URL="https://api.github.com"
 VERSION="0.2.0"
 USER_AGENT="git-ls-github-forks/$VERSION (/bin/sh)"
 
+# Here we define all of the command-line options, process them so that
+# they are available variables, and then perform the necessary actions
+# for each.
+
+OPTIONS=$(getopt --name "git ls-github-forks" \
+    --shell "sh" \
+    --options "v::" \
+    --longoptions "version::" \
+    -- "$@")
+
+if test "$?" -ne "0"
+then
+    exit 1
+fi
+
+eval set -- "$OPTIONS"
+
+while true
+do
+    case "$1" in
+        -v|--version) echo "Version $VERSION"; exit 0 ;;
+        *) break ;;
+    esac
+done
+
 # Get the remote GitHub repository URL.  We use this later but at
 # first we want to make sure it exists so that we know this repository
 # exists on GitHub.
@@ -29,7 +54,7 @@ REPOSITORY_URL=$(git ls-remote --get-url)
 # error message from Git.
 if test "$?" -ne "0"
 then
-    exit 1
+    exit 2
 fi
 
 # We want to send a request to
