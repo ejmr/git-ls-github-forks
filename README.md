@@ -15,7 +15,7 @@ git://github.com/valdest/git-ls-github-forks
 ```
 
 Running the command inside of a Git repository will list URLs to all
-public forks on GitHub.  This acts a low-level ‘plumbing’ command (to
+public forks on GitHub.  This acts as a low-level ‘plumbing’ command (to
 use Git terminology) for performing actions on every fork,
 e.g. comparing updates, cloning forks, making remote branches for
 certain forks, and so on.
