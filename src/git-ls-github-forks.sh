@@ -48,8 +48,10 @@ JSON_QUERY=".[] | .git_url"
 
 # Fetch the JSON data about forks from GitHub and extract all of the
 # URLs for those forks, sending them to standard output.
-curl --silent --user-agent "$USER_AGENT" "$DATA_URL" | \
-    jq --raw-output --monochrome-output "$JSON_QUERY"
+curl --silent \
+    --user-agent "$USER_AGENT" \
+    "$DATA_URL" \
+    | jq --raw-output --monochrome-output "$JSON_QUERY"
 
 # Mission accomplished, so we exit successfully and then try to think
 # of something actually productive to do as opposed to doing anything
