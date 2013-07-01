@@ -15,7 +15,7 @@ API_URL="https://api.github.com"
 # User-Agent.  We use the program name since other programmers may
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
-VERSION="0.1.0"
+VERSION="0.2.0"
 USER_AGENT="git-ls-github-forks/$VERSION (/bin/sh)"
 
 # Get the remote GitHub repository URL.  We use this later but at
@@ -50,6 +50,7 @@ JSON_QUERY=".[] | .git_url"
 # URLs for those forks, sending them to standard output.
 curl --silent \
     --user-agent "$USER_AGENT" \
+    --header "Accept: application/vnd.github.beta+json" \
     "$DATA_URL" \
     | jq --raw-output --monochrome-output "$JSON_QUERY"
 
