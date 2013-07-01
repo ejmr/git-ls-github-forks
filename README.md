@@ -30,9 +30,12 @@ Installation
 2. Make sure your GitHub name is available, i.e. `git config --get
    github.user` must return your GitHub account name.
 
-3. **Optional:** Create the alias `git config --global --path
-   alias.ls-github-forks "!sh /the/path/to/git-ls-github-forks.sh"`.
-   This lets you run the command as `git ls-github-forks`.
+3. **Optional:** Create the alias to run the command as `git
+   ls-github-forks`, for example:
+
+```sh
+$ git config --global --path alias.ls-github-forks "!sh /the/path/to/git-ls-github-forks.sh"
+```
 
 
 Requirements
