@@ -23,7 +23,13 @@ USER_AGENT="$NAME/$VERSION (/bin/sh)"
 # they are available variables, and then perform the necessary actions
 # for each.
 
-USAGE="[-h|--help] [-v|--version]"
+USAGE=$(cat <<EOF
+$NAME [options]
+
+-h, --help     Display this help
+-v, --version  Show the current version number
+EOF
+)
 
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
@@ -41,7 +47,7 @@ OPTIONS=$(getopt --name "$NAME" \
 # looks like clutter.
 if test "$?" -ne "0"
 then
-    echo "usage: $NAME $USAGE"
+    echo "usage: $USAGE"
     exit 1
 fi
 
@@ -51,7 +57,7 @@ while true
 do
     case "$1" in
         -v|--version) echo "$NAME $VERSION"; exit 0 ;;
-        -h|--help) echo "usage: $NAME $USAGE"; exit 0 ;;
+        -h|--help) echo "usage: $USAGE"; exit 0 ;;
         *) break ;;
     esac
 done
