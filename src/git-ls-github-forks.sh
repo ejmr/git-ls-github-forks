@@ -15,14 +15,15 @@ API_URL="https://api.github.com"
 # User-Agent.  We use the program name since other programmers may
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
+NAME="git-ls-github-forks"
 VERSION="0.2.0"
-USER_AGENT="git-ls-github-forks/$VERSION (/bin/sh)"
+USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
 # Here we define all of the command-line options, process them so that
 # they are available variables, and then perform the necessary actions
 # for each.
 
-OPTIONS=$(getopt --name "git ls-github-forks" \
+OPTIONS=$(getopt --name "$NAME" \
     --shell "sh" \
     --options "v::" \
     --longoptions "version::" \
