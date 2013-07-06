@@ -19,12 +19,30 @@ NAME="git-ls-github-forks"
 VERSION="0.2.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
+# This represents the URL format we use for output.  Here are the
+# valid values with examples:
+#
+#     "git"  - git://github.com/ejmr/git-ls-github-forks
+#     "http" - https://github.com/ejmr/git-ls-github-forks
+#     "svn"  - https://svn.github.com/ejmr/git-ls-github-forks
+#     "ssh"  - git@github.com:ejmr/git-ls-github-forks
+#     "api"  - https://api.github.com/repos/ejmr/git-ls-github-forks
+#
+# By default we use the "git" format.  Assigning any other string to
+# this variable will break the program.
+FORMAT="git"
+
 # Here we define all of the command-line options, process them so that
 # they are available variables, and then perform the necessary actions
 # for each.
 
 USAGE=$(cat <<EOF
 $NAME [options]
+
+-f, --format <format>
+    Display the URLs in the style of <format>, which must be one of
+    the following: "git", "http", "svn", "ssh", or "api".  The value
+    "git" is the default.
 
 -h, --help     Display this help
 -v, --version  Show the current version number
@@ -34,7 +52,8 @@ EOF
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
     --shell "sh" \
-    --options "v::h::" \
+    --options "f:v::h::" \
+    --longoptions "format:" \
     --longoptions "version::" \
     --longoptions "help::" \
     -- "$@")
@@ -56,6 +75,12 @@ eval set -- "$OPTIONS"
 while true
 do
     case "$1" in
+        -f|--format)
+            shift
+            case "$1" in
+                git|http|svn|ssh|api) FORMAT="$1" ;;
+                *) echo "usage: $USAGE"; exit 1 ;;
+            esac ;;
         -v|--version) echo "$NAME $VERSION"; exit 0 ;;
         -h|--help) echo "usage: $USAGE"; exit 0 ;;
         *) break ;;
