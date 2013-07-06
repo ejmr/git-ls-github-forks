@@ -48,7 +48,7 @@ eval set -- "$OPTIONS"
 while true
 do
     case "$1" in
-        -v|--version) echo "Version $VERSION"; exit 0 ;;
+        -v|--version) echo "$NAME $VERSION"; exit 0 ;;
         *) break ;;
     esac
 done
