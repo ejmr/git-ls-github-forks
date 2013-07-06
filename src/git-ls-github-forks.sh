@@ -26,10 +26,11 @@ USER_AGENT="$NAME/$VERSION (/bin/sh)"
 USAGE="[-v|--version]"
 
 OPTIONS=$(getopt --name "$NAME" \
+    --quiet \
     --shell "sh" \
     --options "v::" \
     --longoptions "version::" \
-    -- "$@" 2>/dev/null)
+    -- "$@")
 
 # If $? is not zero then getopt received an unrecognized option, which
 # is a fatal error.  So we print the $USAGE string and exit.  It would
