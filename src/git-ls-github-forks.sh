@@ -23,13 +23,14 @@ USER_AGENT="$NAME/$VERSION (/bin/sh)"
 # they are available variables, and then perform the necessary actions
 # for each.
 
-USAGE="[-v|--version]"
+USAGE="[-h|--help] [-v|--version]"
 
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
     --shell "sh" \
-    --options "v::" \
+    --options "v::h::" \
     --longoptions "version::" \
+    --longoptions "help::" \
     -- "$@")
 
 # If $? is not zero then getopt received an unrecognized option, which
@@ -50,6 +51,7 @@ while true
 do
     case "$1" in
         -v|--version) echo "$NAME $VERSION"; exit 0 ;;
+        -h|--help) echo "usage: $NAME $USAGE"; exit 0 ;;
         *) break ;;
     esac
 done
