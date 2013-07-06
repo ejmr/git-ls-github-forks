@@ -74,8 +74,6 @@ then
     exit 1
 fi
 
-eval set -- "$OPTIONS"
-
 while true
 do
     case "$1" in
