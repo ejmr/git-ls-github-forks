@@ -23,14 +23,23 @@ USER_AGENT="$NAME/$VERSION (/bin/sh)"
 # they are available variables, and then perform the necessary actions
 # for each.
 
+USAGE="[-v|--version]"
+
 OPTIONS=$(getopt --name "$NAME" \
     --shell "sh" \
     --options "v::" \
     --longoptions "version::" \
-    -- "$@")
+    -- "$@" 2>/dev/null)
 
+# If $? is not zero then getopt received an unrecognized option, which
+# is a fatal error.  So we print the $USAGE string and exit.  It would
+# be better, however, if we pointed out the bad option.  The getopt
+# program does this by default but we throw away everything sent to
+# Standard Error when calling getopt because otherwise the output
+# looks like clutter.
 if test "$?" -ne "0"
 then
+    echo "usage: $NAME $USAGE"
     exit 1
 fi
 
