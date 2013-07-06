@@ -16,7 +16,7 @@ API_URL="https://api.github.com"
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
 NAME="git-ls-github-forks"
-VERSION="0.2.0"
+VERSION="0.3.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
 # This represents the URL format we use for output.  Here are the
@@ -29,8 +29,12 @@ USER_AGENT="$NAME/$VERSION (/bin/sh)"
 #     "api"  - https://api.github.com/repos/ejmr/git-ls-github-forks
 #
 # By default we use the "git" format.  Assigning any other string to
-# this variable will break the program.
+# this variable will break the program.  The $FORMAT_URL variable
+# names the JSON property we extract to get the desired URL, and it
+# must be syntactically valid for the jq program.  See the $JSON_QUERY
+# variable to see exactly where $FORMAT_URL fits in.
 FORMAT="git"
+FORMAT_URL=".git_url"
 
 # Here we define all of the command-line options, process them so that
 # they are available variables, and then perform the necessary actions
@@ -75,14 +79,21 @@ eval set -- "$OPTIONS"
 while true
 do
     case "$1" in
+        
         -f|--format)
             shift
             case "$1" in
-                git|http|svn|ssh|api) FORMAT="$1" ;;
+                git) ;;
+                http) FORMAT_URL=".html_url" ;;
+                svn) FORMAT_URL=".svn_url" ;;
+                ssh) FORMAT_URL=".ssh_url" ;;
+                api) FORMAT_URL=".url" ;;
                 *) echo "usage: $USAGE"; exit 1 ;;
             esac ;;
+        
         -v|--version) echo "$NAME $VERSION"; exit 0 ;;
         -h|--help) echo "usage: $USAGE"; exit 0 ;;
+        
         *) break ;;
     esac
 done
@@ -113,7 +124,7 @@ DATA_URL="$API_URL/repos/$OWNER/$REPOSITORY/forks"
 
 # This is the template we give to the jq program in order to extract
 # and display the URL for each fork.
-JSON_QUERY=".[] | .git_url"
+JSON_QUERY=".[] | $FORMAT_URL"
 
 # Fetch the JSON data about forks from GitHub and extract all of the
 # URLs for those forks, sending them to standard output.
