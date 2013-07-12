@@ -45,6 +45,15 @@ Requirements
 * [jq](http://stedolan.github.io/jq/)
 
 
+Documentation
+-------------
+
+Running the program with `-h` or `--help` will display information
+about the available options.  If you have the programs [Pandoc][] and
+[Tup][] then you can create a man page by running `tup upd` inside the
+project’s directory.
+
+
 Upcoming Features
 -----------------
 
@@ -52,12 +61,8 @@ The program uses [Semantic Versioning](http://semver.org/) and is
 currently going through unstable development.  Features for the stable
 version 1.0.0 will include:
 
-* Display fork URLs in different formats, e.g. using HTTPS or SVN.
-
 * The ability to sort fork URLs based on the number of commits, most
   recent updates, number of watchers, and other statistics.
-
-* A complete [man page](https://www.kernel.org/doc/man-pages/).
 
 * Support for HTTP redirections which GitHub may send.
 
@@ -74,3 +79,8 @@ License
 [GNU General Public License](http://www.gnu.org/copyleft/gpl.html)
 
 Copyright 2013 Eric James Michael Ritz
+
+
+
+[Pandoc]: http://johnmacfarlane.net/pandoc/
+[Tup]: http://gittup.org/tup/
