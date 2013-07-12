@@ -20,20 +20,19 @@ VERSION="0.3.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
 # This represents the URL format we use for output.  Here are the
-# valid values with examples:
+# valid values with examples of the URLs they ultimate create:
 #
-#     "git"  - git://github.com/ejmr/git-ls-github-forks
-#     "http" - https://github.com/ejmr/git-ls-github-forks
-#     "svn"  - https://svn.github.com/ejmr/git-ls-github-forks
-#     "ssh"  - git@github.com:ejmr/git-ls-github-forks
-#     "api"  - https://api.github.com/repos/ejmr/git-ls-github-forks
+#     ".git_url"  - git://github.com/ejmr/git-ls-github-forks
+#     ".http_url" - https://github.com/ejmr/git-ls-github-forks
+#     ".svn_url"  - https://svn.github.com/ejmr/git-ls-github-forks
+#     ".ssh_url"  - git@github.com:ejmr/git-ls-github-forks
+#     ".url"      - https://api.github.com/repos/ejmr/git-ls-github-forks
 #
-# By default we use the "git" format.  Assigning any other string to
+# By default we use the Git format.  Assigning any other string to
 # this variable will break the program.  The $FORMAT_URL variable
 # names the JSON property we extract to get the desired URL, and it
 # must be syntactically valid for the jq program.  See the $JSON_QUERY
 # variable to see exactly where $FORMAT_URL fits in.
-FORMAT="git"
 FORMAT_URL=".git_url"
 
 # Here we define all of the command-line options, process them so that
