@@ -16,7 +16,7 @@ API_URL="https://api.github.com"
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
 NAME="git-ls-github-forks"
-VERSION="0.3.0"
+VERSION="0.4.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
 # This represents the URL format we use for output.  Here are the
@@ -127,7 +127,7 @@ JSON_QUERY=".[] | $FORMAT_URL"
 # URLs for those forks, sending them to standard output.
 curl --silent \
     --user-agent "$USER_AGENT" \
-    --header "Accept: application/vnd.github.beta+json" \
+    --header "Accept: application/vnd.github+json" \
     "$DATA_URL" \
     | jq --raw-output --monochrome-output "$JSON_QUERY"
 
