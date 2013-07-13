@@ -16,7 +16,7 @@ API_URL="https://api.github.com"
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
 NAME="git-ls-github-forks"
-VERSION="0.4.0"
+VERSION="0.5.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
 # This represents the URL format we use for output.  Here are the
@@ -33,7 +33,7 @@ USER_AGENT="$NAME/$VERSION (/bin/sh)"
 # names the JSON property we extract to get the desired URL, and it
 # must be syntactically valid for the jq program.  See the $JSON_QUERY
 # variable to see exactly where $FORMAT_URL fits in.
-FORMAT_URL=".git_url"
+FORMAT_URL="\(.git_url)"
 
 # Here we define all of the command-line options, process them so that
 # they are available variables, and then perform the necessary actions
@@ -47,6 +47,9 @@ $NAME [options]
     the following: "git", "http", "svn", "ssh", or "api".  The value
     "git" is the default.
 
+-n, --name
+    Display the owner of the fork.
+
 -h, --help     Display this help
 -v, --version  Show the current version number
 EOF
@@ -55,8 +58,9 @@ EOF
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
     --shell "sh" \
-    --options "f:v::h::" \
+    --options "f:nv::h::" \
     --longoptions "format:" \
+    --longoptions "name" \
     --longoptions "version::" \
     --longoptions "help::" \
     -- "$@")
@@ -73,20 +77,36 @@ then
     exit 1
 fi
 
+# This variable contains text that we give to the 'jq' program in
+# order to select the owner of each fork.  However, we only do this
+# when invoking the program with the '-n' or '--name' options.  By
+# default the variable is an empty string so that we can insert it
+# directly into the query for 'jq' later regardless of whether or not
+# the program receives those options.
+FORK_OWNER=""
+
+# Perform actions and set variables based on the command-line options.
 while true
 do
     case "$1" in
-        
         -f|--format)
-            shift
-            case "$1" in
+            case "$2" in
                 git) ;;
-                http) FORMAT_URL=".html_url" ;;
-                svn) FORMAT_URL=".svn_url" ;;
-                ssh) FORMAT_URL=".ssh_url" ;;
-                api) FORMAT_URL=".url" ;;
+                http) FORMAT_URL="\(.html_url)" ;;
+                svn) FORMAT_URL="\(.svn_url)" ;;
+                ssh) FORMAT_URL="\(.ssh_url)" ;;
+                api) FORMAT_URL="\(.url)" ;;
                 *) echo "usage: $USAGE"; exit 1 ;;
-            esac ;;
+            esac
+            shift 2 ;;
+
+        # Later we add the contents of $FORK_OWNER to the query we
+        # give to the 'jq' program.  Note that the value must begin
+        # with a comma so that ultimately we end up with a
+        # syntactically correct query.
+        -n|--name)
+            FORK_OWNER="\(.owner.login)"
+            shift ;;
         
         -v|--version) echo "$NAME $VERSION"; exit 0 ;;
         -h|--help) echo "usage: $USAGE"; exit 0 ;;
@@ -119,17 +139,13 @@ OWNER=$(git config --get github.user)
 REPOSITORY=$(basename --suffix=".git" "$REPOSITORY_URL")
 DATA_URL="$API_URL/repos/$OWNER/$REPOSITORY/forks"
 
-# This is the template we give to the jq program in order to extract
-# and display the URL for each fork.
-JSON_QUERY=".[] | $FORMAT_URL"
-
 # Fetch the JSON data about forks from GitHub and extract all of the
 # URLs for those forks, sending them to standard output.
 curl --silent \
     --user-agent "$USER_AGENT" \
     --header "Accept: application/vnd.github+json" \
     "$DATA_URL" \
-    | jq --raw-output --monochrome-output "$JSON_QUERY"
+    | jq --raw-output --monochrome-output ".[] | @text \"$FORMAT_URL $FORK_OWNER\""
 
 # Mission accomplished, so we exit successfully and then try to think
 # of something actually productive to do as opposed to doing anything
