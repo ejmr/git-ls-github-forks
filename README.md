@@ -70,9 +70,6 @@ The program uses [Semantic Versioning](http://semver.org/) and is
 currently going through unstable development.  Features for the stable
 version 1.0.0 will include:
 
-* The ability to sort fork URLs based on the number of commits, most
-  recent updates, number of watchers, and other statistics.
-
 * Support for HTTP redirections which GitHub may send.
 
 * Make use of the `If-Modified-Since` header to help avoid exceeding
