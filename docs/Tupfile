@@ -1,0 +1,4 @@
+# This file builds a man page from the original Markdown document.
+: Manual.md \
+|> pandoc %f --from=markdown --to=man --standalone --output=%o \
+|> git-ls-github-forks.man
