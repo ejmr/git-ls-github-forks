@@ -50,6 +50,11 @@ $NAME [options]
 -n, --name
     Display the owner of the fork.
 
+-s, --sort <property>
+    Sort all URLs based on <property>, which must one of the
+    following: "newest", "oldest", or "watchers".  The default is
+    "newest", which lists forks with the most recent changes first.
+
 -h, --help     Display this help
 -v, --version  Show the current version number
 EOF
@@ -58,9 +63,10 @@ EOF
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
     --shell "sh" \
-    --options "f:nv::h::" \
+    --options "f:ns:v::h::" \
     --longoptions "format:" \
     --longoptions "name" \
+    --longoptions "sort:" \
     --longoptions "version::" \
     --longoptions "help::" \
     -- "$@")
@@ -85,6 +91,19 @@ fi
 # the program receives those options.
 FORK_OWNER=""
 
+# This variable contains value of the 'sort' parameter that we give to
+# the GitHub API call.  See the documentation at
+#
+#     http://developer.github.com/v3/repos/forks/
+#
+# for details on acceptable values.  We also document those same
+# values in the program, but the documentation in the URL above is
+# always correct in the event of any discrepancies.  This is an
+# optional parameter for the GitHub API but we always explicitly use
+# it with our API calls.  Therefore we give it the default value that
+# GitHub uses in the absence of the parameter.
+SORT_ORDER="newest"
+
 # Perform actions and set variables based on the command-line options.
 while true
 do
@@ -98,6 +117,10 @@ do
                 api) FORMAT_URL="\(.url)" ;;
                 *) echo "usage: $USAGE"; exit 1 ;;
             esac
+            shift 2 ;;
+
+        -s|--sort)
+            SORT_ORDER="$2"
             shift 2 ;;
 
         # Later we add the contents of $FORK_OWNER to the query we
@@ -135,9 +158,10 @@ fi
 #
 # so here we obtain the user's GitHub name and the repository name to
 # insert into $DATA_URL, which will be in the format shown above.
+# Finally, we also add the $SORT_ORDER parameter to the request.
 OWNER=$(git config --get github.user)
 REPOSITORY=$(basename --suffix=".git" "$REPOSITORY_URL")
-DATA_URL="$API_URL/repos/$OWNER/$REPOSITORY/forks"
+DATA_URL="$API_URL/repos/$OWNER/$REPOSITORY/forks?sort=$SORT_ORDER"
 
 # Fetch the JSON data about forks from GitHub and extract all of the
 # URLs for those forks, sending them to standard output.
