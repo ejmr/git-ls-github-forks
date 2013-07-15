@@ -16,8 +16,16 @@ API_URL="https://api.github.com"
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
 NAME="git-ls-github-forks"
-VERSION="0.5.0"
+VERSION="0.6.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
+
+# If we do not have the 'mktemp' program then we can stop immediately.
+which mktemp >/dev/null
+if test "$?" -ne "0"
+then
+    echo "error: missing mktemp program"
+    exit 3
+fi
 
 # This represents the URL format we use for output.  Here are the
 # valid values with examples of the URLs they ultimate create:
@@ -163,12 +171,19 @@ OWNER=$(git config --get github.user)
 REPOSITORY=$(basename --suffix=".git" "$REPOSITORY_URL")
 DATA_URL="$API_URL/repos/$OWNER/$REPOSITORY/forks?sort=$SORT_ORDER"
 
+# We save output from GitHub into a temporary file for debugging
+# purposes.  The file will be in the system's temporary directory and
+# will have the filename 'github.json.XXXXXX' where the final six
+# characters are random.
+TEMPORARY_OUTPUT_FILE=$(mktemp -t "github.json.XXXXXX")
+
 # Fetch the JSON data about forks from GitHub and extract all of the
 # URLs for those forks, sending them to standard output.
 curl --silent \
     --user-agent "$USER_AGENT" \
     --header "Accept: application/vnd.github+json" \
     "$DATA_URL" \
+    | tee "$TEMPORARY_OUTPUT_FILE" \
     | jq --raw-output --monochrome-output ".[] | @text \"$FORMAT_URL $FORK_OWNER\""
 
 # Mission accomplished, so we exit successfully and then try to think

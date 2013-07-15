@@ -51,6 +51,7 @@ Requirements
 
 * [curl](http://curl.haxx.se/)
 * [jq](http://stedolan.github.io/jq/)
+* [mktemp](http://www.mktemp.org/)
 
 
 Documentation
