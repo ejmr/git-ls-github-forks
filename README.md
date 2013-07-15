@@ -57,10 +57,17 @@ Requirements
 Documentation
 -------------
 
-Running the program with `-h` or `--help` will display information
-about the available options.  If you have the programs [Pandoc][] and
-[Tup][] then you can create a man page by running `tup upd` inside the
-project’s directory.
+Running the program with `-h` will display information about the
+available options.  If you have the programs [Pandoc][] and [Tup][]
+then you can create a man page by running `tup upd` inside the
+project’s directory.  If you only have Pandoc then you can create the
+manual with the following command:
+
+```sh
+$ pandoc Manual.md --from=markdown --to=man --standalone --output=git-ls-github-forks.man
+```
+
+You can then run [man][] on the output file.
 
 
 License
@@ -74,3 +81,4 @@ Copyright 2013 Eric James Michael Ritz
 
 [Pandoc]: http://johnmacfarlane.net/pandoc/
 [Tup]: http://gittup.org/tup/
+[man]: http://primates.ximian.com/~flucifredi/man/
