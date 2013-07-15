@@ -68,21 +68,21 @@ $NAME [options]
     debugging purposes.  This option will print that filename to
     standard error.
 
--h, --help     Display this help
--v, --version  Show the current version number
+--usage    Display this help
+--version  Show the current version number
 EOF
 )
 
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
     --shell "sh" \
-    --options "f:ns:vh" \
+    --options "f:ns:" \
     --longoptions "format:" \
     --longoptions "name" \
     --longoptions "sort:" \
     --longoptions "verbose" \
     --longoptions "version" \
-    --longoptions "help" \
+    --longoptions "usage" \
     -- "$@")
 
 # If $? is not zero then getopt received an unrecognized option, which
@@ -153,8 +153,8 @@ do
             FORK_OWNER="\(.owner.login)"
             shift ;;
         
-        -v|--version) echo "$NAME $VERSION"; exit 0 ;;
-        -h|--help) echo "usage: $USAGE"; exit 0 ;;
+        --version) echo "$NAME $VERSION"; exit 0 ;;
+        --usage) echo "usage: $USAGE"; exit 0 ;;
         
         *) break ;;
     esac
