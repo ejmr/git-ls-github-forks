@@ -63,22 +63,6 @@ about the available options.  If you have the programs [Pandoc][] and
 project’s directory.
 
 
-Upcoming Features
------------------
-
-The program uses [Semantic Versioning](http://semver.org/) and is
-currently going through unstable development.  Features for the stable
-version 1.0.0 will include:
-
-* Support for HTTP redirections which GitHub may send.
-
-* Make use of the `If-Modified-Since` header to help avoid exceeding
-  GitHub’s limit on the number of API requests allowed per hour.
-
-* Support for all major operating systems.  Current support is for
-  Linux only.
-
-
 License
 -------
 
