@@ -63,6 +63,16 @@ $NAME [options]
     following: "newest", "oldest", or "watchers".  The default is
     "newest", which lists forks with the most recent changes first.
 
+--rate-limit
+    GitHub places an hourly limit on the number of API requests the
+    program can make.  This option shows two values: the number of
+    remaining requests available and the date and time when the amount
+    of requests allowed will reset to its maximum value.  Using this
+    option does not count against the number of remaining requests.
+    The program will exit without displaying any forks if given this
+    option, which makes it mutually exclusive to the default behavior
+    of listing forks.
+
 --verbose
     The program saves the response from GitHub in a temporary file
     debugging purposes.  This option will print that filename to
@@ -80,6 +90,7 @@ OPTIONS=$(getopt --name "$NAME" \
     --longoptions "format:" \
     --longoptions "name" \
     --longoptions "sort:" \
+    --longoptions "rate-limit" \
     --longoptions "verbose" \
     --longoptions "version" \
     --longoptions "usage" \
@@ -126,6 +137,20 @@ SORT_ORDER="newest"
 while true
 do
     case "$1" in
+
+        # Reading http://developer.github.com/v3/#rate-limiting
+        # explains the 'GET /rate_limit' method we call.  We must
+        # create raw output from 'jq', otherwise the results will be
+        # wrapped in quotes that will screw up 'date' later on.
+        --rate-limit)
+            curl --silent "$API_URL/rate_limit" \
+                | jq --raw-output "\"\(.rate.remaining) \(.rate.reset)\"" \
+                | while read REMAINING RESET_DATE
+            do
+                echo "Status: $REMAINING remaining API requests until $(date --date=@$RESET_DATE)"
+            done
+            exit 0 ;;
+
         -f|--format)
             case "$2" in
                 git) ;;
