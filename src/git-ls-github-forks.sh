@@ -76,13 +76,13 @@ EOF
 OPTIONS=$(getopt --name "$NAME" \
     --quiet \
     --shell "sh" \
-    --options "f:ns:v::h::" \
+    --options "f:ns:vh" \
     --longoptions "format:" \
     --longoptions "name" \
     --longoptions "sort:" \
     --longoptions "verbose" \
-    --longoptions "version::" \
-    --longoptions "help::" \
+    --longoptions "version" \
+    --longoptions "help" \
     -- "$@")
 
 # If $? is not zero then getopt received an unrecognized option, which
