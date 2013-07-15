@@ -16,7 +16,7 @@ API_URL="https://api.github.com"
 # create forks.  We also include the implementation because in the
 # future this program may exist in different programming languages.
 NAME="git-ls-github-forks"
-VERSION="0.6.0"
+VERSION="0.7.0"
 USER_AGENT="$NAME/$VERSION (/bin/sh)"
 
 # If we do not have the 'mktemp' program then we can stop immediately.
@@ -195,6 +195,7 @@ TEMPORARY_OUTPUT_FILE=$(mktemp -t "github.json.XXXXXX")
 # URLs for those forks, sending them to standard output.
 curl --silent \
     --user-agent "$USER_AGENT" \
+    --location \
     --header "Accept: application/vnd.github+json" \
     "$DATA_URL" \
     | tee "$TEMPORARY_OUTPUT_FILE" \
