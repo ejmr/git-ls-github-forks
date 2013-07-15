@@ -63,6 +63,11 @@ $NAME [options]
     following: "newest", "oldest", or "watchers".  The default is
     "newest", which lists forks with the most recent changes first.
 
+--verbose
+    The program saves the response from GitHub in a temporary file
+    debugging purposes.  This option will print that filename to
+    standard error.
+
 -h, --help     Display this help
 -v, --version  Show the current version number
 EOF
@@ -75,6 +80,7 @@ OPTIONS=$(getopt --name "$NAME" \
     --longoptions "format:" \
     --longoptions "name" \
     --longoptions "sort:" \
+    --longoptions "verbose" \
     --longoptions "version::" \
     --longoptions "help::" \
     -- "$@")
@@ -90,6 +96,10 @@ then
     echo "usage: $USAGE"
     exit 1
 fi
+
+# If this has a non-zero value then we print the name of the temporary
+# output file later.  The --verbose flag enables this behavior.
+VERBOSE="0"
 
 # This variable contains text that we give to the 'jq' program in
 # order to select the owner of each fork.  However, we only do this
@@ -130,6 +140,10 @@ do
         -s|--sort)
             SORT_ORDER="$2"
             shift 2 ;;
+
+        --verbose)
+            VERBOSE="1"
+            shift ;;
 
         # Later we add the contents of $FORK_OWNER to the query we
         # give to the 'jq' program.  Note that the value must begin
@@ -185,6 +199,16 @@ curl --silent \
     "$DATA_URL" \
     | tee "$TEMPORARY_OUTPUT_FILE" \
     | jq --raw-output --monochrome-output ".[] | @text \"$FORMAT_URL $FORK_OWNER\""
+
+# If we are running in verbose mode then we echo the name of
+# $TEMPORARY_OUTPUT_FILE to standard error.  The primary purpose of
+# the program is to provide 'plumbing' output for other Git commands
+# which is why we use standard error to show this information instead
+# of standard output.
+if test "$VERBOSE" -ne "0"
+then
+    echo "$TEMPORARY_OUTPUT_FILE" >/dev/stderr
+fi
 
 # Mission accomplished, so we exit successfully and then try to think
 # of something actually productive to do as opposed to doing anything
