@@ -16,9 +16,17 @@ git://github.com/valdest/git-ls-github-forks
 
 Running the command inside of a Git repository will list URLs to all
 public forks on GitHub.  This acts as a low-level ‘plumbing’ command (to
-use Git terminology) for performing actions on every fork,
-e.g. comparing updates, cloning forks, making remote branches for
-certain forks, and so on.
+use Git terminology) for performing actions on every fork.  For
+example, this script creates a remote branch for each fork:
+
+```sh
+#!/bin/sh
+
+git ls-github-forks --name | while read URL USER
+do
+    git remote add "$USER" "$URL"
+done
+```
 
 
 Installation
